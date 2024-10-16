@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: markdown-editor-service
+spec:
+  type: NodePort  # Change to NodePort if not using a cloud provider
+  ports:
+  - port: 80
+    targetPort: 5000
+  selector:
+    app: markdown-editor

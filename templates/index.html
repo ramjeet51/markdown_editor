@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Markdown Editor</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/2.0.3/marked.min.js"></script> <!-- Include marked.js -->
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Markdown Editor</h1>
+        </header>
+
+        <div class="editor-section">
+            <textarea id="markdown-input" placeholder="Write your Markdown here..."></textarea>
+            <div id="markdown-preview" class="preview-area"></div>
+        </div>
+
+        <div class="button-section">
+            <form action="/save" method="POST">
+                <input type="text" name="filename" placeholder="Enter file name" required>
+                <select name="fileformat" required>
+                    <option value="md">Markdown (.md)</option>
+                    <option value="txt">Plain Text (.txt)</option>
+                </select>
+                <input type="hidden" name="markdown_content" id="markdown-content-hidden">
+                <button type="submit">Save</button>
+            </form>
+        </div>
+
+        <div class="file-list">
+            <h2>Saved Files</h2>
+            <ul id="file-list">
+                {% for file in files %}
+                <li>
+                    {{ file }} 
+                    <form action="/delete/{{ file }}" method="POST" style="display:inline;">
+                        <button type="submit" class="delete-button">Delete</button>
+                    </form>
+                    <a href="/download/{{ file }}" class="download-button">Download</a>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <footer>
+            <p>&copy; 2024 Markdown Editor. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    <script>
+        // Live preview functionality
+        const input = document.getElementById('markdown-input');
+        const preview = document.getElementById('markdown-preview');
+        const hiddenInput = document.getElementById('markdown-content-hidden');
+
+        input.addEventListener('input', function() {
+            const markedContent = marked(input.value); // Convert Markdown to HTML
+            preview.innerHTML = markedContent;
+            hiddenInput.value = input.value; // Store content in a hidden input for submission
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: markdown-editor
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: markdown-editor
+  template:
+    metadata:
+      labels:
+        app: markdown-editor
+    spec:
+      containers:
+      - name: markdown-editor
+        image: <your-dockerhub-username>/markdown-editor:latest  # Replace with your Docker Hub username
+        ports:
+        - containerPort: 5000
+        volumeMounts:
+        - name: markdown-storage
+          mountPath: /app/saved_files  # Mount path for persistent storage
+      volumes:
+      - name: markdown-storage
+        emptyDir: {}  # Temporary storage; change to a persistent volume for production
