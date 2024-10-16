@@ -14,6 +14,8 @@
         </header>
 
         <div class="editor-section">
+            <!-- Color Picker Added Here -->
+            <input type="color" id="text-color" value="#000000">  <!-- Color Picker -->
             <textarea id="markdown-input" placeholder="Write your Markdown here..."></textarea>
             <div id="markdown-preview" class="preview-area"></div>
         </div>
@@ -26,6 +28,7 @@
                     <option value="txt">Plain Text (.txt)</option>
                 </select>
                 <input type="hidden" name="markdown_content" id="markdown-content-hidden">
+                <input type="hidden" name="text_color" id="text-color-hidden"> <!-- Hidden Input for Color -->
                 <button type="submit">Save</button>
             </form>
         </div>
@@ -56,11 +59,23 @@
         const input = document.getElementById('markdown-input');
         const preview = document.getElementById('markdown-preview');
         const hiddenInput = document.getElementById('markdown-content-hidden');
+        const colorPicker = document.getElementById('text-color');
 
         input.addEventListener('input', function() {
             const markedContent = marked(input.value); // Convert Markdown to HTML
             preview.innerHTML = markedContent;
             hiddenInput.value = input.value; // Store content in a hidden input for submission
+        });
+
+        // Change text color based on color picker
+        colorPicker.addEventListener('input', function() {
+            input.style.color = colorPicker.value; // Change text color in the textarea
+            preview.style.color = colorPicker.value; // Change text color in the preview area
+        });
+
+        // Store selected text color in hidden input when submitting the form
+        document.querySelector('form').addEventListener('submit', function() {
+            document.getElementById('text-color-hidden').value = colorPicker.value;
         });
     </script>
 </body>
