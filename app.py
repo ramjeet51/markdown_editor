@@ -1,14 +1,14 @@
 import os
 from flask import Flask, request, render_template, send_from_directory
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder='.')  # Set current folder for templates
 SAVE_DIRECTORY = 'saved_files'  # Directory where files will be saved
 
 @app.route('/')
 def index():
     # List all Markdown files in the save directory
     files = [f for f in os.listdir(SAVE_DIRECTORY) if f.endswith(('.md', '.txt'))]
-    return render_template('index.html', files=files)
+    return render_template('index.html', files=files)  # No need to specify subfolder
 
 @app.route('/save', methods=['POST'])
 def save_file():
