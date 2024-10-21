@@ -1,8 +1,10 @@
 import os
 from flask import Flask, request, render_template, send_from_directory
 
-app = Flask(__name__, template_folder='.')  # Set current folder for templates
-SAVE_DIRECTORY = 'saved_files'  # Directory where files will be saved
+app = Flask(__name__, template_folder='.', static_folder='.')  # Set current folder for templates and static files
+
+# Get the current directory where app.py is located
+SAVE_DIRECTORY = os.path.dirname(os.path.abspath(__file__))  # Save files in the same directory as app.py
 
 @app.route('/')
 def index():
@@ -25,7 +27,7 @@ def save_file():
         else:
             return "Invalid file format!", 400
 
-        # Save the file with the appropriate extension
+        # Save the file with the appropriate extension in the same directory as app.py
         with open(os.path.join(SAVE_DIRECTORY, f"{filename}{extension}"), 'w') as file:
             file.write(markdown_content)
         return index()  # Redirect back to the index page after saving
@@ -49,6 +51,4 @@ def download_file(filename):
     return send_from_directory(SAVE_DIRECTORY, filename, as_attachment=True)
 
 if __name__ == '__main__':
-    if not os.path.exists(SAVE_DIRECTORY):
-        os.makedirs(SAVE_DIRECTORY)  # Create the save directory if it doesn't exist
     app.run(debug=True)
